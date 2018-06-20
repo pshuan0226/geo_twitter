@@ -20,7 +20,9 @@ search_result = [status for status in tweepy.Cursor(api.search, q=query, lang="e
 result_count = len(search_result)
 
 for each in search_result:
-	print each.full_text
+	print each.user.name + " "
+	print each.full_text + "\n"
+	
 
 print "got %d results" % result_count
 
