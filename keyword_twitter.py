@@ -15,8 +15,12 @@ result_count = 0
 search_result = []
 last_id = -1
 
-for tweet in tweepy.Cursor(api.search, q=query, count = max_result, tweet_mode = "extended").items():
-	print tweet.full_text
+search_result = [status for status in tweepy.Cursor(api.search, q=query, tweet_mode = "extended").items(max_result)]
+
+result_count = len(search_result)
+
+for each in search_result:
+	print each.full_text
 
 print "got %d results" % result_count
 
