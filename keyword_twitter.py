@@ -15,17 +15,8 @@ result_count = 0
 search_result = []
 last_id = -1
 
-while len(search_result) < max_result:
-	count = max_result - len(search_result);
-	try:
-		new_twt = api.search(q=query, c=count, max_id = str(last_id - 1))
-		if not new_twt:
-			break
-		search_result.extend(new_twt)
-		last_id = new_twt[-1].id
-		result_count += 1
-	except tweepy.TweepError as e:
-		break
+for tweet in tweepy.Cursor(api.search, q=query, count = max_result, tweet_mode = "extended").items():
+	print tweet.full_text
 
 print "got %d results" % result_count
 
