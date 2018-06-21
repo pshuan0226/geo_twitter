@@ -2,7 +2,9 @@
 
 ## Purpose
 A project mainly for filtering tweets using geofencing and keyword tuning.
+
 keyword_twitter.py directly prints to terminal
+
 geo_twitter.py outputs results to a csv file
 
 
