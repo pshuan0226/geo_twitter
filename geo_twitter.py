@@ -1,51 +1,66 @@
-#!/usr/bin/python
-#code from https://github.com/ideoforms/python-twitter-examples
+#!/usr/bin/env python
+#Created by Patricia Huang
+#Project purpose: Geofencing/feed filter for HCSC
 
-from twitter import *
+import tweepy
+import time
 import sys
 import csv
 
 
-latitude = 41.885000
-longitude = -87.619670
-outfile = "results.csv"
-max_range = 1
+#Preparing for result.csv
+outfile = "result.csv"
+csvfile = file(outfile, "w") 
+csvwriter = csv.writer(csvfile, delimiter=' ')
 
+
+#Consumer/Access tokens stored in config.py
+#Please create your own config.py
 config = {}
 execfile("config.py", config)
 
-twitter = Twitter(auth = OAuth(config["access_key"], config["access_secret"], config["consumer_key"], config["consumer_secret"]))
+
+auth = tweepy.OAuthHandler(config["consumer_key"], config["consumer_secret"])
+auth.set_access_token(config["access_key"], config["access_secret"])
+
+api = tweepy.API(auth)
 
 
-csvfile = file(outfile, "w")
-csvwriter = csv.writer(csvfile)
-
-row = ["user", "text", "latitude", "longitude"]
-csvwriter.writerow(row)
-
+#Modify query for more/fewer keywords
+query = ('bcbsil OR HCSC -filter:retweets')
+max_result = 1000
 result_count = 0
-num_results = 50
-last_id = None
+search_result = []
+last_id = -1
+backoff_counter = 1
 
-while result_count < num_results:
-	query = twitter.search.tweets(q = "", geocode = "%f,%f,%dkm" % (latitude, longitude, max_range), count = 100, max_id = last_id)
 
-	for result in query["statuses"]:
-		if result["geo"]:
-			user = result["user"]["screen_name"]
-			text = result["text"]
-			text = text.encode('ascii', 'replace')
-			latitude = result["geo"]["coordinates"][0]
-			longitude = result["geo"]["coordinates"][1]
-
-			row = [ user, text, latitude, longitude ]
+#Here is all the fun!
+#Geocode coordinates set to BCBSIL HQ
+while True:
+	try:
+		for each in tweepy.Cursor(api.search, q=query, lang="en", 	
+			geocode="41.884938,-87.619960,20km", 
+			tweet_mode="extended").items(max_result):
+			#Printing to result.csv
+			last_id += 1
+			user = each.user.name 
+			tweet = each.full_text.encode('utf-8')
+			time = each.created_at
+			row = [last_id, user, time, tweet]
 			csvwriter.writerow(row)
-			result_count += 1
-		last_id = result["id"]
-
-	print "got %d results" % result_count
-
-csvfile.close()
-
-print "written to %s" % outfile
+		break
+	except tweepy.TweepError as e:
+		print(e.reason)
+		time.sleep(60*backoff_counter)
+		backoff_counter += 1
+		continue
+		
 	
+#Feedback to user
+print "got %d results\n" % (last_id + 1)
+print "written to %s\n" % outfile
+
+
+#End
+csvfile.close()
