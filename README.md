@@ -1,7 +1,10 @@
 # hcsc_geo
 
 ## Purpose
-A project mainly for filtering tweets using geofencing and keyword tuning
+A project mainly for filtering tweets using geofencing and keyword tuning.
+keyword_twitter.py directly prints to terminal
+geo_twitter.py outputs results to a csv file
+
 
 ## Before you run geo_twitter.py
 1. Login to twitter and create a twitter application at https://apps.twitter.com/
