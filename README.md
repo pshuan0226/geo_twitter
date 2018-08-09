@@ -4,10 +4,6 @@
 A project mainly for filtering tweets using geofencing and keyword tuning.
 
 ### One time search 
-`print_geo.py` directly prints to terminal
-
-`csv_geo.py` outputs results to a csv file
-
 `sqlite_geo.py` outputs results to a sqlite database
 
 ### Streamer
