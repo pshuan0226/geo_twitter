@@ -23,7 +23,7 @@ access_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 access_secret = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
-3. Keywords and coordinates are currently set to HCSC, but feel free to include more in the `query` parameter
+3. Keywords and coordinates are currently not set, but feel free to include more in the `query` parameter
 4. Run the following command to install the necessary packages:
 
 ```python
